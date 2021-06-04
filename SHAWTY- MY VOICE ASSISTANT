@@ -1,0 +1,125 @@
+import pyttsx3
+import speech_recognition as sr
+import datetime
+import webbrowser
+import random
+import smtplib
+import os
+import subprocess
+engine=pyttsx3.init('sapi5')
+voices=engine.getProperty('voices')
+engine.setProperty('voice',voices[1].id)
+
+
+
+def speak(text):
+    engine.say(text)
+    engine.runAndWait()
+
+def wishme():
+    hour=int(datetime.datetime.now().hour)
+    if hour>=0 and hour<12:
+        speak("Good Morning DSK!!")
+    elif hour>=12 and hour<15:
+        speak("Good Afternoon DSK!!")
+    else:
+        speak("Good Evening DSK!!")
+    speak("I am Shawty, your pesonal assistant, How may i help you? ")
+
+def takeCommand():
+    #This function takes input of the through his/her voice.
+    r=sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        r.pause_threshold=0.8
+        audio=r.listen(source)
+        
+    try:
+        print("Recognizing...")
+        query=r.recognize_google(audio,language='en-in')
+        print(f"User said: {query}\n")
+    except Exception as e:
+        print("Say again")
+        return "None"
+    return query
+
+
+ 
+
+if __name__ == "__main__":
+    wishme()
+    while True:
+        query=takeCommand().lower()
+        if 'open youtube' in query:
+            speak("wait")
+            webbrowser.open('www.youtube.com')
+        elif 'open google' in query:
+            speak("Wait")
+            webbrowser.open('www.google.com')
+        elif 'open gmail' in query:
+            speak("Wait")
+            webbrowser.open('www.gmail.com')
+        elif 'open facebook' in query:
+            speak('wait')
+            webbrowser.open('www.facebook.com')
+        elif 'open instagram' in query:
+            speak("Wait")
+            webbrowser.open('www.instagram.com')
+        elif 'how are you?' in query or 'How are you doing?' in query:
+            reply=['I am fine','I am doing good,thank you for asking','I am cool, what about you?']
+            speak(random.choice(reply))
+        elif 'compose email' in query:
+            try:
+
+                speak('Whom should i send?')
+                sender_email='kailashdevisri@gmail.com'
+
+                rec_email=input(str('Give receivers mail id\n'))
+                password=input(str('password of your account:'))
+                content=input(str('type your content\n'))
+                server=smtplib.SMTP('smtp.gmail.com',587)
+                server.ehlo()
+                server.starttls()
+                server.login(sender_email,password)
+                print("login Success")
+                server.sendmail(sender_email, rec_email, content)
+                server.close()
+                print('Your email has been sent')
+                speak('Your email has been sent')
+            except:
+                speak('oops! I am unable to send your message at this moment!')
+        elif 'play music' in query:
+            directory='E:\SONGS\SGS (2016) ~ 320Kbps'
+            songs=os.listdir(directory)
+            s=random.choice(songs)
+            print(songs)
+            os.startfile(os.path.join(directory,s))
+        elif 'calculator' in query:
+            subprocess.Popen('C:\\Windows\\System32\\calc.exe')
+        elif 'notepad' in query:
+            subprocess.Popen('C:\\Windows\\System32\\notepad.exe')
+        elif 'spotify' in query:
+             os.system('start Spotify:')
+        elif ' Netflix' in query:
+             os.system('start Netflix:')
+        elif 'time' in query:
+            strTime = datetime.datetime.now().strftime("%H:%M:%S")    
+            speak(f" the time is {strTime}")
+        elif 'quit' in query:
+            exit()
+        
+        
+           
+
+
+            
+
+
+
+
+
+        
+            
+
+    
+  
